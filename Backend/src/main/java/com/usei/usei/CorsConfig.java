@@ -3,8 +3,10 @@ package com.usei.usei;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -13,26 +15,24 @@ import org.springframework.web.filter.CorsFilter;
 public class CorsConfig {
 
     @Bean
-    public CorsFilter corsFilter() {
+    public FilterRegistrationBean<CorsFilter> corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        // 1. Permitir acceso desde CUALQUIER lugar (Ideal para demo, usar con cuidado en producción real)
-        config.setAllowedOrigins(Collections.singletonList("*"));
-
-        // 2. Permitir TODOS los headers (Esto arregla el error de "header not allowed")
+        // 1. Configuración permisiva para la demo
+        config.setAllowedOriginPatterns(Collections.singletonList("*")); // Usar patterns es más seguro con allowCredentials
         config.setAllowedHeaders(Collections.singletonList("*"));
-
-        // 3. Permitir TODOS los métodos HTTP
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-
-        // 4. Credenciales deben ser false si usas "*" en origins
-        config.setAllowCredentials(false);
-
-        // 5. Cachear la respuesta preflight para que no pregunte en cada petición (1 hora)
+        
+        // 2. Credenciales y tiempo de vida
+        config.setAllowCredentials(true); 
         config.setMaxAge(3600L);
 
         source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+
+        // 3. LA CLAVE: Registrar el filtro con la prioridad MÁS ALTA posible
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
     }
 }
