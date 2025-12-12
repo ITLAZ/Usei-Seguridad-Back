@@ -19,18 +19,16 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        // 1. Configuración permisiva para la demo
-        config.setAllowedOriginPatterns(Collections.singletonList("*")); // Usar patterns es más seguro con allowCredentials
+        // Configuración ULTRA permisiva para que funcione sí o sí
+        config.setAllowedOriginPatterns(Collections.singletonList("*")); 
         config.setAllowedHeaders(Collections.singletonList("*"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        
-        // 2. Credenciales y tiempo de vida
         config.setAllowCredentials(true); 
         config.setMaxAge(3600L);
 
         source.registerCorsConfiguration("/**", config);
 
-        // 3. LA CLAVE: Registrar el filtro con la prioridad MÁS ALTA posible
+        // AQUÍ ESTÁ EL TRUCO: Forzar prioridad máxima
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
