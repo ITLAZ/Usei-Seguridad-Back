@@ -1,7 +1,6 @@
 spring:
   web:
     resources:
-      #mostrar certificado del estudiante
       static-locations: classpath:/static/, classpath:/static/documents/formatos/
       cache:
         period: 3600s
@@ -9,14 +8,10 @@ spring:
   mvc:
     throw-exception-if-no-handler-found: true
 
-  # web:
-  #   resources:
-  #     add-mappings: true
-
   datasource:
-    url: jdbc:postgresql://localhost:5433/proyecto_usei
-    username: admin
-    password: 12345
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -28,16 +23,11 @@ spring:
       hibernate.jdbc.time_zone: America/La_Paz
 
   datasource.hikari:
-    maximum-pool-size: 1       # 👈 SOLO 1 conexión permitida!!
+    maximum-pool-size: 1       # 👈 obligatorio para Supabase
     minimum-idle: 0
     idle-timeout: 10000
     connection-timeout: 20000
     max-lifetime: 30000
-
-  # resources:
-  #   static-locations: classpath:/static/documents/  # Ruta para servir archivos estáticos
-  #   cache:
-  #     period: 3600s  # Cachea los archivos estáticos durante una hora
 
   servlet:
     multipart:
@@ -56,26 +46,7 @@ spring:
           starttls:
             enable: true
   debug: true
+
 server:
-  port: ${PORT:8080} # Cambia 8081 por el puerto que desees utilizar, puede ser 8081, 9000, etc.
+  port: ${PORT:8080}
   time-zone: America/La_Paz
-
-# Swagger configuration
-springfox:
-  documentation:
-    swagger-ui:
-      base-url: /swagger-ui
-    api-docs:
-      path: /v2/api-docs
-
-# Configuración adicional para Swagger
-swagger:
-  api-info:
-    title: "Documentación de la API de Proyecto USEI"
-    description: "Documentación generada automáticamente con Swagger para Proyecto USEI"
-    version: "1.0"
-
-servlet:
-  multipart:
-    max-file-size: 100MB
-    max-request-size: 100MB
