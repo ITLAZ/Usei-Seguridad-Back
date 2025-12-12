@@ -50,7 +50,7 @@ spring:
             enable: true
   debug: true
 server:
-  port: 8082  # Cambia 8081 por el puerto que desees utilizar, puede ser 8081, 9000, etc.
+  port: 8080  # Cambia 8081 por el puerto que desees utilizar, puede ser 8081, 9000, etc.
   time-zone: America/La_Paz
 
 # Swagger configuration
