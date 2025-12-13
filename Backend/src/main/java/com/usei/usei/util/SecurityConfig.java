@@ -53,7 +53,8 @@ public class SecurityConfig {
         // Por ahora, permitimos localhost y la propia URL de Railway del backend (para pruebas)
         config.setAllowedOrigins(List.of(
             "http://localhost:5173", 
-            "https://usei-seguridad-back-production.up.railway.app"
+            "https://usei-seguridad-back-production.up.railway.app",
+            "https://usei-seguridad-front-8yvz7pc4r-ignacios-projects-1b5e3921.vercel.app"
         ));
         
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
