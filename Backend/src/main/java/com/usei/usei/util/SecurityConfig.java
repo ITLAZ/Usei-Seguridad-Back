@@ -25,22 +25,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para APIs REST
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Usar nuestra config de CORS
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/auth/**",
-                    "/configuracion-seguridad/ping",
-                    "/ping",
-                    "/",
-                    "/usuario/**",
-                    "/rol/**",
-                    "/imagenes/**",
-                    "/documents/**"
-                ).permitAll() // Permite acceso público a estas rutas
-                .anyRequest().authenticated() // Todo lo demás requiere autenticación
-            )
-            .httpBasic(basic -> basic.disable()); // Desactivar Basic Auth para evitar pop-ups del navegador
+                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para APIs REST
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Usar nuestra config de CORS
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/auth/**",
+                                "/configuracion-seguridad/ping",
+                                "/ping",
+                                "/",
+                                "/usuario/**",
+                                "/rol/**",
+                                "/imagenes/**",
+                                "/documents/**")
+                        .permitAll() // Permite acceso público a estas rutas
+                        .anyRequest().authenticated() // Todo lo demás requiere autenticación
+                )
+                .httpBasic(basic -> basic.disable()); // Desactivar Basic Auth para evitar pop-ups del navegador
 
         return http.build();
     }
@@ -48,18 +48,26 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        
-        // IMPORTANTE: En producción (Railway), agrega aquí la URL de tu frontend si lo despliegas.
-        // Por ahora, permitimos localhost y la propia URL de Railway del backend (para pruebas)
+
         config.setAllowedOrigins(List.of(
-            "http://localhost:5173", 
-            "https://usei-seguridad-back-production.up.railway.app",
-            "https://usei-seguridad-front-8yvz7pc4r-ignacios-projects-1b5e3921.vercel.app"
-        ));
-        
+                "http://localhost:5173", // Desarrollo local
+                "https://usei-seguridad-back-production.up.railway.app", // Tu propio backend
+                // 👇 Agrega AQUÍ la URL principal que te dio Vercel (la corta)
+                "https://usei-seguridad-front.vercel.app",
+                // Esta es la específica que tenías, puedes dejarla por si acaso:
+                "https://usei-seguridad-front-8yvz7pc4r-ignacios-projects-1b5e3921.vercel.app"));
+
+        // Métodos permitidos
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept"));
-        config.setAllowCredentials(true); // Permitir cookies/credenciales si las usas
+
+        // Headers permitidos: Usa "*" para evitar problemas con headers que envíe Axios
+        // automáticamente
+        config.setAllowedHeaders(List.of("*"));
+
+        // Exponer headers si es necesario (opcional, pero ayuda a veces con el token)
+        config.setExposedHeaders(List.of("Authorization"));
+
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
