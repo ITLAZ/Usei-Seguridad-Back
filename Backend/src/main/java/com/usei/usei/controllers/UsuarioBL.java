@@ -270,7 +270,7 @@ public class UsuarioBL implements UsuarioService {
             System.out.println("📧 To: " + to + " | Subject: " + subject);
 
             Map<String, Object> payload = new HashMap<>();
-            payload.put("from", "onboarding@resend.dev");
+            payload.put("from", "useiseguridad@correosusei.tkyo-laz.me");
             payload.put("to", java.util.List.of(to));
             payload.put("subject", subject);
             payload.put("text", body != null ? body : "");
