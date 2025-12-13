@@ -52,3 +52,5 @@ spring:
 server:
   port: ${PORT:8080}
   time-zone: America/La_Paz
+jwt:
+  secret: USEI_SUPER_SECRET_KEY_2025_CAMBIA_ESTO_1234567890
