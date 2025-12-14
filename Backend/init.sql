@@ -633,13 +633,6 @@ INSERT INTO configuracion_seguridad (
     true   -- Configuration is active
 );
 
--- Reference: Log_Usuario_Usuario (table: Log_Usuario)
-ALTER TABLE Log_Usuario ADD CONSTRAINT Log_Usuario_Usuario
-    FOREIGN KEY (Usuario_id_usuario)
-    REFERENCES Usuario (id_usuario)
-    NOT DEFERRABLE
-    INITIALLY IMMEDIATE;
-
 ALTER TABLE Contrasenia DROP COLUMN IF EXISTS contrasenia_id_pass;
 -- Reference: historial_kri_indicador_riesgo (table: historial_kri)
 ALTER TABLE historial_kri ADD CONSTRAINT historial_kri_indicador_riesgo
