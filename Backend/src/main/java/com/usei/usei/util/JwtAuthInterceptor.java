@@ -19,83 +19,80 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
                              HttpServletResponse response,
                              Object handler) throws Exception {
 
-        // Permitir OPTIONS (preflight CORS)
+        // ---------------------------------------------------------
+        // 0) PRE-FLIGHT CORS
+        // ---------------------------------------------------------
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
             return true;
         }
 
         final String path = request.getRequestURI();
         final String method = request.getMethod();
 
-        // =========================================================
-        // 1) DEFINIR SI ESTE REQUEST DEBE GENERAR AUDITORÍA/LOG
-        //    (Solo mutaciones: POST/PUT/PATCH/DELETE)
-        // =========================================================
+        // ---------------------------------------------------------
+        // 1) AUDITORÍA (solo mutaciones)
+        // ---------------------------------------------------------
         boolean isMutation =
                 "POST".equalsIgnoreCase(method)
                         || "PUT".equalsIgnoreCase(method)
                         || "PATCH".equalsIgnoreCase(method)
                         || "DELETE".equalsIgnoreCase(method);
 
-        // Este flag lo usas donde guardas logs:
-        // if ((boolean) request.getAttribute("auditEnabled")) { ...guardar log... }
         request.setAttribute("auditEnabled", isMutation);
 
-        // =========================================================
-        // 2) RUTAS PÚBLICAS (SIN TOKEN)
-        // =========================================================
+        // ---------------------------------------------------------
+        // 2) RUTAS PÚBLICAS
+        // ---------------------------------------------------------
 
-        // Login y recuperación de contraseña
-        if (path.equals("/auth/login")
-                || path.startsWith("/estudiante/enviarCodigoVerificacion")
-                || path.startsWith("/usuario/enviarCodigoVerificacion")) {
+        // Auth / login
+        if (path.startsWith("/auth/")
+                || path.startsWith("/usuario/enviarCodigoVerificacion")
+                || path.startsWith("/estudiante/enviarCodigoVerificacion")) {
             return true;
         }
 
-        //Logs de auditoria
-        if (path.equals("/log-usuario/auditoria/acceso")) {
+        // Auditoría pública
+        if (path.startsWith("/log-usuario/")) {
+            return true;
+        }
+
+        // Noticias públicas
+        if (path.startsWith("/noticia/")) {
             return true;
         }
 
         // Recursos estáticos
         if (path.startsWith("/documents/")
                 || path.startsWith("/imagenes/")
-                || path.equals("/noticia/carrusel")) {
+                || path.equals("/favicon.ico")) {
             return true;
         }
 
-        // ✅ IMPORTANTE:
-        // Ya NO dejamos /rol público en GET.
-        // Si necesitas userId para auditoría, /rol debe ir con token.
-        // (También recomiendo proteger /rol/verificar-acceso por lo mismo)
-
-        // =========================================================
-        // 3) VALIDACIÓN DE TOKEN PARA TODO LO DEMÁS
-        // =========================================================
+        // ---------------------------------------------------------
+        // 3) VALIDACIÓN JWT
+        // ---------------------------------------------------------
         String authHeader = request.getHeader("Authorization");
 
-        // Si NO hay token -> 401
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write(
-                    "{\"error\":\"Token no proporcionado\",\"message\":\"Debe autenticarse para acceder a este recurso\"}"
+                    "{\"error\":\"UNAUTHORIZED\",\"message\":\"Token no proporcionado\"}"
             );
             return false;
         }
 
-        // Validar token
         Jws<Claims> claims = tokenGenerator.validateAndParseToken(authHeader);
         if (claims == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write(
-                    "{\"error\":\"Token inválido o expirado\",\"message\":\"Su sesión ha expirado, por favor inicie sesión nuevamente\"}"
+                    "{\"error\":\"UNAUTHORIZED\",\"message\":\"Token inválido o expirado\"}"
             );
             return false;
         }
 
-        // Guardar datos del usuario en el request para uso posterior
         request.setAttribute("userId", claims.getBody().get("id"));
         request.setAttribute("userType", claims.getBody().get("type"));
         request.setAttribute("username", claims.getBody().get("username"));
