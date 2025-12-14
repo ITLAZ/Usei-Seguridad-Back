@@ -52,6 +52,11 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        //Logs de auditoria
+        if (path.equals("/log-usuario/auditoria/acceso")) {
+            return true;
+        }
+
         // Recursos estáticos
         if (path.startsWith("/documents/")
                 || path.startsWith("/imagenes/")
