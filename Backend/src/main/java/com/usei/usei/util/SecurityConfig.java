@@ -28,19 +28,38 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para APIs REST
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Usar nuestra config de CORS
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth/**",
-                                "/configuracion-seguridad/ping",
-                                "/ping",
-                                "/",
-                                "/usuario/**",
-                                "/rol/**",
-                                "/noticia/**",
-                                "/log-usuario/**",
-                                "/imagenes/**",
-                                "/documents/**")
-                        .permitAll() // Permite acceso público a estas rutas
-                        .anyRequest().authenticated() // Todo lo demás requiere autenticación
+                    .requestMatchers(
+                        "/auth/**",
+                        "/configuracion-seguridad/**",
+                        "/configuracion-seguridad/ping",
+                        "/ping",
+                        "/",
+                        "/usuario/**",
+                        "/rol/**",
+                        "/noticia/**",
+                        "/log-usuario/**",
+                        "/certificado/**",
+                        "/encuesta/**",
+                        "/encuesta-gestion/**",
+                        "/estado-certificado/**",
+                        "/estado-encuesta/**",
+                        "/estudiante/**",
+                        "/indicador-riesgo/**",
+                        "/notificacion/**",
+                        "/opciones-pregunta/**",
+                        "/parametros-aviso/**",
+                        "/plazo/**",
+                        "/pregunta/**",
+                        "/reporte/**",
+                        "/respuesta/**",
+                        "/riesgo-evento/**",
+                        "/soporte/**",
+                        "/tipo-notificacion/**",
+                        "/tipo-problema/**",
+                        "/imagenes/**",
+                        "/documents/**")
+                    .permitAll() // Permite acceso público a estas rutas
+                    .anyRequest().authenticated() // Todo lo demás requiere autenticación
                 )
                 .httpBasic(basic -> basic.disable()); // Desactivar Basic Auth para evitar pop-ups del navegador
 

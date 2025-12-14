@@ -33,17 +33,39 @@ public class WebConfig implements WebMvcConfigurer {
                         "/usuario/login",
                         "/usuario/register",
                         "/auth/**",
-                        
+
                         // Rutas públicas específicas (Aquí solucionamos el 401)
                         "/rol/**",
                         "/usuario/**",
-                        
+
+                        // APIs públicas (se permiten todas las rutas de la carpeta api)
+                        "/certificado/**",
+                        "/configuracion-seguridad/**",
+                        "/encuesta/**",
+                        "/encuesta-gestion/**",
+                        "/estado-certificado/**",
+                        "/estado-encuesta/**",
+                        "/estudiante/**",
+                        "/indicador-riesgo/**",
+                        "/noticia/**",
+                        "/notificacion/**",
+                        "/opciones-pregunta/**",
+                        "/parametros-aviso/**",
+                        "/plazo/**",
+                        "/pregunta/**",
+                        "/reporte/**",
+                        "/respuesta/**",
+                        "/riesgo-evento/**",
+                        "/soporte/**",
+                        "/tipo-notificacion/**",
+                        "/tipo-problema/**",
+
                         // Utilidades y health check
                         "/configuracion-seguridad/ping",
                         "/ping",
                         "/",
                         "/error",
-                        
+
                         // Recursos estáticos
                         "/documents/**",
                         "/imagenes/**",
