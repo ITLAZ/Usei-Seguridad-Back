@@ -35,6 +35,8 @@ public class SecurityConfig {
                                 "/",
                                 "/usuario/**",
                                 "/rol/**",
+                                "/noticia/**",
+                                "/log-usuario/**",
                                 "/imagenes/**",
                                 "/documents/**")
                         .permitAll() // Permite acceso público a estas rutas
