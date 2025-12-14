@@ -59,6 +59,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/soporte/**",
                         "/tipo-notificacion/**",
                         "/tipo-problema/**",
+                        "/api/**",
 
                         // Utilidades y health check
                         "/configuracion-seguridad/ping",

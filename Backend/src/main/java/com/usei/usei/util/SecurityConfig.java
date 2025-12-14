@@ -56,6 +56,7 @@ public class SecurityConfig {
                         "/soporte/**",
                         "/tipo-notificacion/**",
                         "/tipo-problema/**",
+                        "/api/**",
                         "/imagenes/**",
                         "/documents/**")
                     .permitAll() // Permite acceso público a estas rutas
