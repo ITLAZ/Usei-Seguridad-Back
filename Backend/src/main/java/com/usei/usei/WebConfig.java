@@ -35,8 +35,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/auth/**",
                         
                         // Rutas públicas específicas (Aquí solucionamos el 401)
-                        /* "/rol/**",
-                        "/usuario/**",  */
+                        "/rol/**",
+                        "/usuario/**",
                         
                         // Utilidades y health check
                         "/configuracion-seguridad/ping",
